@@ -58,3 +58,15 @@ export class Logger {
     }
   }
 }
+
+function readEnvLevel(): LogLevel {
+  const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process
+    ?.env;
+  const raw = env?.LOG_LEVEL;
+  if (raw && raw in LEVEL_PRIORITY) {
+    return raw as LogLevel;
+  }
+  return 'info';
+}
+
+export const log: Logger = new Logger({ level: readEnvLevel() });
